@@ -2,7 +2,7 @@
 #Bash script that gives you information about the school file
 #Requirements:
 
-    #You must use if and, else (case is forbidden)
+    #You must use if and, else
     #if the file exists: school file exists
     #if the file does not exist: school file does not exist
 #If the file exists, print:
