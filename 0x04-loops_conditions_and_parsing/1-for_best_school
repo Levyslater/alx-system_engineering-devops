@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 #This script displays "Best School" 10 times
-count=10
-while [ $count -gt 0 ]
+for ((j=1; j<=10; j++));
 do
 	echo "Best School"
-	count=$((count - 1))
 done
