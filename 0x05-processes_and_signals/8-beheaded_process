@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-#Bash script that kills the process 7-highlander
-if pgrep -f "7-highlander" > /dev/null
-then
-    pid=$(pgrep -f "7-highlander")
-    kill -9 "$pid"
-fi
