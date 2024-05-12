@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Get listening ports and corresponding PIDs
+listening_ports=$(netstat -tuln | grep LISTEN | awk '{print $4, $NF}' | awk -F'[:/ ]' '{print $4}')
+
+echo "Listening Ports:"
+echo "================"
+
+# Iterate through each port and get the corresponding PID and program name
+for port in $listening_ports; do
+    pid=$(lsof -i :$port | awk 'NR==2{print $2}')
+    program=$(lsof -i :$port | awk 'NR==2{print $1}')
+    echo "Port: $port   PID: $pid   Program: $program"
+done
