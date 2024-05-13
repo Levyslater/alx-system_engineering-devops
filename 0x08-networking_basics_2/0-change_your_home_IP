@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Map localhost and Facebook to a different IP address
+if grep -q "^127\.0\.0\.1[[:space:]]*localhost" /etc/hosts; then
+
+	sed -i '/^127\.0\.0\.1[[:space:]]*localhost/d' /etc/hosts
+fi
+
+echo "127.0.0.2		localhost" >> /etc/hosts
+echo "8.8.8.8		facebook.com" >> /etc/hosts
+
