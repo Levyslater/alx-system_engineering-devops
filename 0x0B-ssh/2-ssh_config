@@ -1,0 +1,6 @@
+HOST *
+	PasswordAuthentication yes
+	IdentityFile ~/.ssh/school
+	SendEnv LANG LC_*
+	HashKnownHosts yes
+	GSSAPIAuthentication yes
