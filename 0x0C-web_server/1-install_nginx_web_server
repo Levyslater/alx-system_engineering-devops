@@ -9,5 +9,5 @@ sudo systemctl start nginx
 echo "Hello World!" | sudo tee /var/www/html/index.html
 
 # Restart Nginx service to apply changes
-sudo systemctl restart nginx
+sudo service nginx restart
 
