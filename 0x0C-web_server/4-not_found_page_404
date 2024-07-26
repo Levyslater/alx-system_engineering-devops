@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -e  # Exit immediately if a command exits with a non-zero status
+
+# Update package list and install Nginx if it's not already installed
+if ! dpkg -l | grep -q nginx; then
+    sudo apt-get update && sudo apt-get install -y nginx
+fi
+
+# Start Nginx server
+sudo systemctl start nginx
+
+# Create index.html with "Hello World!" text
+echo "Hello World!" | sudo tee /var/www/html/index.html
+
+# Restart server to apply changes
+sudo systemctl restart nginx
+
+# Update Nginx configuration file to add redirection
+sudo sed -i '/^}$/i \ \n\trewrite ^/redirect_me$ https:\/\/www.google.com permanent;' /etc/nginx/sites-available/default
+
+# Create custom 404 error page
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html
+
+# Update Nginx configuration file to add error page if page not found
+# Internal key phrase ensure client cannot access the page, only nginx
+sudo sed -i '/^}$/i \ \n\terror_page 404 /404.html;\n\n\tlocation /404.html {\n\t\tinternal;\n\t}' /etc/nginx/sites-available/default
+
+# Check for errors in the config file
+sudo nginx -t
+
+# Restart server to apply changes
+sudo systemctl restart nginx
+
+echo "Nginx has been successfully installed, configured, and restarted."
+

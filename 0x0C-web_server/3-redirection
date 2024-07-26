@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+set -e  # Exit immediately if a command exits with a non-zero status
+
+# Install Nginx server
+if ! sudo apt-get update; then
+    echo "Failed to update package list"
+    exit 1
+fi
+
+if ! sudo apt-get install -y nginx; then
+    echo "Failed to install Nginx"
+    exit 1
+fi
+
+# Start Nginx server
+if ! sudo systemctl start nginx; then
+    echo "Failed to start Nginx"
+    exit 1
+fi
+
+# Create index.html with "Hello World!" text
+if ! echo "Hello World!" | sudo tee /var/www/html/index.html; then
+    echo "Failed to create index.html"
+    exit 1
+fi
+
+# Restart server to apply changes
+if ! sudo systemctl restart nginx; then
+    echo "Failed to restart Nginx"
+    exit 1
+fi
+
+# Update Nginx configuration file to add redirection
+if ! sudo sed -i '/^}$/i \ \n\trewrite ^/redirect_me$ https:\/\/www.google.com permanent;' /etc/nginx/sites-available/default; then
+    echo "Failed to update Nginx configuration"
+    exit 1
+fi
+
+# Check for errors in the config file
+if ! sudo nginx -t; then
+    echo "Nginx configuration test failed"
+    exit 1
+fi
+
+# Restart server to apply changes
+if ! sudo systemctl restart nginx; then
+    echo "Failed to restart Nginx"
+    exit 1
+fi
+
+echo "Nginx has been successfully installed, configured, and restarted."
+
