@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -e  # Exit immediately if a command exits with a non-zero status
 
 # Update package list and install Nginx if it's not already installed

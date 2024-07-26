@@ -1,3 +1,4 @@
+# modify config file using puppet 
 exec { 'update system':
   command => '/usr/bin/apt-get update',
 }
