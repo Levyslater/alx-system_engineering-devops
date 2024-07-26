@@ -8,13 +8,13 @@ if ! dpkg -l | grep -q nginx; then
 fi
 
 # Start Nginx server
-sudo systemctl start nginx
+sudo service nginx start
 
 # Create index.html with "Hello World!" text
 echo "Hello World!" | sudo tee /var/www/html/index.html
 
 # Restart server to apply changes
-sudo systemctl restart nginx
+sudo services nginx restart
 
 # Update Nginx configuration file to add redirection
 sudo sed -i '/^}$/i \ \n\trewrite ^/redirect_me$ https:\/\/www.google.com permanent;' /etc/nginx/sites-available/default
@@ -30,7 +30,7 @@ sudo sed -i '/^}$/i \ \n\terror_page 404 /404.html;\n\n\tlocation /404.html {\n\
 sudo nginx -t
 
 # Restart server to apply changes
-sudo systemctl restart nginx
+sudo services nginx restart
 
 echo "Nginx has been successfully installed, configured, and restarted."
 
