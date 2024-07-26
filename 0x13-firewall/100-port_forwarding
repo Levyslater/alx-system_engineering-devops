@@ -6,6 +6,8 @@
 #   ufw-before-input
 #   ufw-before-output
 #   ufw-before-forward
+#   
+
 # Forwarding port 8080 to port 80
 *nat
 :PREROUTING ACCEPT [0:0]
