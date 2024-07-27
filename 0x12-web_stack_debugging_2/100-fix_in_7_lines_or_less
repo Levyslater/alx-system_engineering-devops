@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Run nginx as a different user(nginx) and not as root
+sudo sed -i 's/user www-data/user' /etc/nginx/nginx.conf
+sudo ed -i 's/80/8080/g' /etc/nginx/sites-available/default
+sudo chmod 644 /etc/nginx/nginx.conf
+sudo kill "$(pgrep 'apache2' | head -1)"
+sudo -u nginx service nginx restart
+
