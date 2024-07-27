@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#config nginx to listen to port 80 of all active 1pv4 addresses
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Install Nginx if it's not already installed
+if ! command -v nginx > /dev/null; then
+    sudo apt-get update
+    sudo apt-get install -y nginx
+fi
+
+# Remove the default config file otherwise modifications will be appended
+sudo rm -f /etc/nginx/sites-enabled/default
+
+# Create a new default config file with the required settings
+cat <<EOL | sudo tee /etc/nginx/sites-available/default
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+}
+EOL
+
+# Create a symbolic link to the sites-enabled directory
+sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+# Restart Nginx to apply changes
+sudo service nginx restart
+
+echo "Nginx has been successfully configured to listen on port 80 for all active IPv4 addresses."
+

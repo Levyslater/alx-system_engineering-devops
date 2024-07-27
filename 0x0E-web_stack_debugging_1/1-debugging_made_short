@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+sudo sed -i '/listen \[::\]:80 default_server;/a \\tlisten 80 default_server;' /etc/nginx/sites-available/default
+sudo service nginx restart
+sudo kill "$(pgrep 'nginx' | head -1)"
+
