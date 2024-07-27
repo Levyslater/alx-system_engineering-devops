@@ -32,7 +32,7 @@ if ! sudo service nginx restart; then
 fi
 
 # Update Nginx configuration file to add redirection
-if ! sudo sed -i '/^}$/i \ \n\trewrite ^/redirect_me$ https:\/\/www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default; then
+if ! sudo sed -i '/server_name _;/a \\n    location /redirect_me { return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4; }' /etc/nginx/sites-available/default; then
     echo "Failed to update Nginx configuration"
     exit 1
 fi
