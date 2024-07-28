@@ -1,3 +1,4 @@
+#!usr/bin/env bash
 # install nginx and configure a custom header response
 
 exec { 'update':
