@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Install and configure HAproxy on your lb-01 server
+# Configure HAproxy so that it send traffic to web-01 and web-02
+# Distribute requests using a roundrobin algorithm
+# Make sure that HAproxy can be managed via an init script
+
+sudo apt upgrade && sudo apt-get install -y haproxy
+
+# ensure haproxy run immediately on boot
+echo "ENABLED=1" | sudo tee --append /etc/default/haproxy
+
+cat <<EOT | sudo tee -a /etc/haproxy/haproxy.cfg
+frontend lawre.tech
+        timeout client 30000
+        bind 0:80
+        default_backend lawre.tech_backend
+
+backend lawre.tech_backend
+        timeout connect 3000
+        timeout server 30000
+        balance roundrobin
+        server 451414-web-01 54.209.26.149:80 check
+        server 451414-web-02 54.175.243.246:80 check
+EOT
+
+sudo service haproxy restart

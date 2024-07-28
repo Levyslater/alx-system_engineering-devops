@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Install Nginx server
+if ! sudo apt-get update; then
+    echo "Failed to update package list"
+    exit 1
+fi
+
+if ! sudo apt-get install -y nginx; then
+    echo "Failed to install Nginx"
+    exit 1
+fi
+
+# Start Nginx server
+if ! sudo service nginx restart; then
+    echo "Failed to start Nginx"
+    exit 1
+fi
+
+# Create index.html with "Hello World!" text
+if ! echo "Hello World!" | sudo tee /var/www/html/index.html; then
+    echo "Failed to create index.html"
+    exit 1
+fi
+
+# Restart server to apply changes
+if ! sudo service nginx restart; then
+    echo "Failed to restart Nginx"
+    exit 1
+fi
+
+# Define Nginx configuration file path
+NGINX_CONFIG_FILE="/etc/nginx/sites-available/default"
+
+# Remove existing redirection if it exists
+sudo sed -i '/location \/redirect_me { return 301 https:\/\/www.youtube.com\/watch?v=QH2-TGUlwu4; }/d' $NGINX_CONFIG_FILE
+
+# Update Nginx configuration file to add redirection
+if ! sudo sed -i '/server_name _;/a \\n    location /redirect_me { return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4; }' $NGINX_CONFIG_FILE; then
+    echo "Failed to update Nginx configuration"
+    exit 1
+fi
+
+# Create custom 404 error page
+if ! echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html; then
+    echo "Failed to create 404.html"
+    exit 1
+fi
+
+# Remove existing 404 error configuration block if it exists
+sudo sed -i '/error_page 404 \/404.html;/,/^\s*}/d' $NGINX_CONFIG_FILE
+
+# Update Nginx configuration file to add error page if page not found
+if ! sudo sed -i '/^}$/i \\n    error_page 404 /404.html;\n    location /404.html {\n        internal;\n    }' $NGINX_CONFIG_FILE; then
+    echo "Failed to update Nginx configuration"
+    exit 1
+fi
+
+# Update the nginx configuration to use a custom header and redirection
+sudo sed -i 's|listen \[::\]:80 default_server;|listen \[::\]:80 default_server;\n\tadd_header X-Served-By \$hostname;|g' /etc/nginx/sites-available/default
+
+# Check for errors in the config file
+if ! sudo nginx -t; then
+    echo "Nginx configuration test failed"
+    exit 1
+fi
+
+# Restart server to apply changes
+if ! sudo service nginx restart; then
+    echo "Failed to restart Nginx"
+    exit 1
+fi
+
+echo "Nginx has been successfully installed, configured, and restarted."
+
