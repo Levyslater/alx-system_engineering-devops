@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Script to print domains and subdomains passed as arguments
+
+display_domain_subdomain () {
+    # perform DNS resolution for the given domain
+    dig "$1" | grep -A1 'ANSWER SECTION:' | sed -r "s/$1./$2/g" | awk -F" " ' NR==2 { print "The subdomain " $1 " is a " $4 " record and points to " $5 }'
+}
+
+if [ "$#" -eq 2 ]; then
+    # If two arguments are provided, treat the second as the subdomain
+    print_domain_subdomain "$2.$1" "$2"
+else
+    # If only one argument is provided, check common subdomains
+    display_domain_subdomain "www.$1" "www"
+    display_domain_subdomain "lb-01.$1" "lb-01"
+    display_domain_subdomain "web-01.$1" "web-01"
+    display_domain_subdomain "web-02.$1" "web-02"
+fi
+
+# Usage:
+# ./script.sh domain.com [subdomain]
+# Example:
+# ./script.sh example.com www
+# ./script.sh example.com
+
