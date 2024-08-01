@@ -17,6 +17,3 @@ mysqldump -uroot -p"$DB_PASS" --all-databases > $DUMP_FILE
 # Create a compressed archive of the dump file
 tar -cvzf $ARCHIVE_FILE $DUMP_FILE
 
-# Remove the uncompressed dump file
-rm $DUMP_FILE
-
