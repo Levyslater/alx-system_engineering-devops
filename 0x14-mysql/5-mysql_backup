@@ -10,7 +10,7 @@ fi
 DB_PASS="$1"
 DATE=$(date +%d-%m-%Y)
 DUMP_FILE="backup.sql"
-ARCHIVE_FILE="backup_$DATE.tar.gz"
+ARCHIVE_FILE="$DATE.tar.gz"
 
 # Dump all MySQL databases
 mysqldump -uroot -p"$DB_PASS" --all-databases > $DUMP_FILE
