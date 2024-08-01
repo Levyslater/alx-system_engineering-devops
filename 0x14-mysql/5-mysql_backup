@@ -14,21 +14,8 @@ ARCHIVE_FILE="$DATE.tar.gz"
 
 # Dump all MySQL databases
 mysqldump -uroot -p"$DB_PASS" --all-databases > $DUMP_FILE
-
-# Check if mysqldump was successful
-if [ $? -ne 0 ]; then
-  echo "Error: mysqldump failed"
-  exit 1
-fi
-
 # Create a compressed archive of the dump file
 tar -cvzf $ARCHIVE_FILE $DUMP_FILE
-
-# Check if tar was successful
-if [ $? -ne 0 ]; then
-  echo "Error: tar failed"
-  exit 1
-fi
 
 # Remove the uncompressed dump file
 rm $DUMP_FILE
