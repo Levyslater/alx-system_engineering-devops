@@ -18,8 +18,6 @@ def number_of_subscribers(subreddit):
     try:
         # ensure you are not following redirects by setting value to false
         response = requests.get(url, headers=headers, allow_redirects=False)
-        # Raises HTTPError for bad responses (4xx, 5xx)
-        response.raise_for_status()
     except requests.exceptions.HTTPError:
         return 0  # If the subreddit doesn't exist or request fails, return 0
     except requests.exceptions.RequestException as e:
