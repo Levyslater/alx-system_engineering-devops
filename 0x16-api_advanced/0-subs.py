@@ -20,6 +20,7 @@ def number_of_subscribers(subreddit):
         response = requests.get(url, headers=headers, allow_redirects=False)
         # Raises HTTPError for bad responses (4xx, 5xx)
         response.raise_for_status()
+    except requests.exceptions.HTTPError:
         return 0  # If the subreddit doesn't exist or request fails, return 0
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")

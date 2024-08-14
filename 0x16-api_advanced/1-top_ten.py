@@ -35,11 +35,3 @@ def top_ten(subreddit):
             print(post.get('data', {}).get('title', None))
     except (KeyError, TypeError):
         print(None)
-
-
-if __name__ == "__main__":
-    # test the code functionality
-    if len(argv) > 1:
-        top_ten(argv[1])
-    else:
-        print("Please provide a subreddit name.")
