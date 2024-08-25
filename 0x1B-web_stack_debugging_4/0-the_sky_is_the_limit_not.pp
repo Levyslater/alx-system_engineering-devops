@@ -1,6 +1,6 @@
-# Modify nginx config file to increase tasks limit
-exec { 'modify nginx max open files limit':
-  command => 'sed -i "s/^#worker_rlimit_nofile.*/worker_rlimit_nofile 10000;/" /etc/nginx/nginx.conf && systemctl restart nginx',
-  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-}
+# fix nginx to accept and serve more requests
 
+exec {'modify max open files limit setting':
+  command => 'sed -i "s/15/10000/" /etc/default/nginx && sudo service nginx restart',
+  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games',
+}
